@@ -13,13 +13,13 @@ public class Cancel extends JFrame implements ActionListener {
     JButton fetchButton, flight;
     
     public Cancel() {
-        // Set background color and layout
+        
         getContentPane().setBackground(Color.WHITE);
         setLayout(null);
         
         Random random = new Random();
         
-        // Heading (Modern Font and Positioning)
+        
         JLabel heading = new JLabel("Ticket Cancellation");
         heading.setBounds(180, 20, 400, 35);
         heading.setFont(new Font("Arial", Font.BOLD, 30));
@@ -120,7 +120,7 @@ public class Cancel extends JFrame implements ActionListener {
             ResultSet rs = conn.s.executeQuery(query);
             
             if (rs.next()) {
-                String flightCode = rs.getString("flight_code"); // Updated column name
+                String flightCode = rs.getString("flightcode"); // Updated column name
                 String travelDate = rs.getString("ddate");       // Changed back to "ddate"
                 
                 // Debugging output to the console

@@ -168,7 +168,7 @@ public class BookFlight extends JFrame implements ActionListener {
         gbc.anchor = GridBagConstraints.CENTER;
         add(bookflight, gbc);
 
-        // Populate source and destination comboboxes
+        
         try {
             Conn c = new Conn();
             String query = "SELECT DISTINCT source FROM flight";
@@ -193,7 +193,7 @@ public class BookFlight extends JFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent ae) {
         if (ae.getSource() == fetchButton) {
-            // Fetch user details
+            
             String nid = tfnid.getText();
             String phone = tfphone.getText();
 
@@ -219,7 +219,7 @@ public class BookFlight extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
         } else if (ae.getSource() == flight) {
-            // Fetch flight details
+            
             String src = (String) source.getSelectedItem();
             String dest = (String) destination.getSelectedItem();
             try {
@@ -237,7 +237,7 @@ public class BookFlight extends JFrame implements ActionListener {
                 e.printStackTrace();
             }
         } else if (ae.getSource() == bookflight) {
-            // Book flight
+            
             String nid = tfnid.getText();
             String phone = tfphone.getText();
             String name = tfname.getText();
@@ -248,7 +248,7 @@ public class BookFlight extends JFrame implements ActionListener {
             String des = (String) destination.getSelectedItem();
             String ddate = ((JTextField) dcdate.getDateEditor().getUiComponent()).getText();
 
-            // Validate inputs
+            
             if (nid.isEmpty() || phone.isEmpty() || name.isEmpty() || nationality.isEmpty() || flightname.isEmpty() || flightcode.isEmpty() || src.isEmpty() || des.isEmpty() || ddate.isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Please fill in all fields before booking.");
                 return;
@@ -265,7 +265,7 @@ public class BookFlight extends JFrame implements ActionListener {
                 conn.s.executeUpdate(query);
 
                 JOptionPane.showMessageDialog(null, "Ticket Booked Successfully");
-                setVisible(false); // Close the booking window
+                setVisible(false); 
             } catch (SQLException e) {
                 e.printStackTrace();
                 JOptionPane.showMessageDialog(null, "Error while booking flight. SQL State: " + e.getSQLState() + ", Error Code: " + e.getErrorCode() + ", Message: " + e.getMessage());

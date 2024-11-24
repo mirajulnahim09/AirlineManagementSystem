@@ -6,96 +6,101 @@ import java.awt.event.*;
 import java.sql.*;
 
 public class Login extends JFrame implements ActionListener {
-    JButton submit, reset, close;
-    JTextField tfUsername;
-    JPasswordField tfPassword;
+    JButton login, cancel, signup;
+    JTextField usernameField;
+    JPasswordField passwordField;
+    JComboBox<String> loginAsCombo;
 
     public Login() {
-        setTitle("Login");
+        setTitle("Airline Management System - Login");
+        getContentPane().setBackground(Color.WHITE);
         setLayout(new BorderLayout());
-        
-        JPanel gradientPanel = new GradientPanel();
-        gradientPanel.setLayout(new GridBagLayout());
+
+        // Header Label
+        JLabel header = new JLabel("Airline Management System", JLabel.CENTER);
+        header.setFont(new Font("Arial", Font.BOLD, 24));
+        header.setForeground(new Color(0, 128, 255));
+        add(header, BorderLayout.NORTH);
+
+        // Login Panel
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new GridBagLayout());
+        loginPanel.setBackground(Color.WHITE);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        Font defaultFont = new Font("Arial", Font.PLAIN, 16);
-
-        JLabel lblLogin = new JLabel("User Login", JLabel.CENTER);
-        lblLogin.setFont(new Font("Arial", Font.BOLD, 24));
+        // Username
+        JLabel lblUsername = new JLabel("Username:");
+        lblUsername.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gradientPanel.add(lblLogin, gbc);
+        loginPanel.add(lblUsername, gbc);
 
-        JLabel lblUsername = new JLabel("Username:");
-        lblUsername.setFont(defaultFont);
-        gbc.gridwidth = 1;
-        gbc.gridx = 0;
-        gbc.gridy++;
-        gbc.anchor = GridBagConstraints.WEST;
-        gradientPanel.add(lblUsername, gbc);
-
-        tfUsername = new JTextField(15);
+        usernameField = new JTextField(15);
+        usernameField.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridx = 1;
-        gradientPanel.add(tfUsername, gbc);
+        loginPanel.add(usernameField, gbc);
 
+        // Password
         JLabel lblPassword = new JLabel("Password:");
-        lblPassword.setFont(defaultFont);
+        lblPassword.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridx = 0;
-        gbc.gridy++;
-        gbc.anchor = GridBagConstraints.WEST;
-        gradientPanel.add(lblPassword, gbc);
+        gbc.gridy = 1;
+        loginPanel.add(lblPassword, gbc);
 
-        tfPassword = new JPasswordField(15);
+        passwordField = new JPasswordField(15);
+        passwordField.setFont(new Font("Arial", Font.PLAIN, 16));
         gbc.gridx = 1;
-        gradientPanel.add(tfPassword, gbc);
+        loginPanel.add(passwordField, gbc);
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
+        // Login as
+        JLabel lblLoginAs = new JLabel("Log in as:");
+        lblLoginAs.setFont(new Font("Arial", Font.PLAIN, 16));
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        loginPanel.add(lblLoginAs, gbc);
 
-        submit = new JButton("Login");
-        styleButton(submit);
-        submit.addActionListener(this);
-        buttonPanel.add(submit);
+        loginAsCombo = new JComboBox<>(new String[]{"Admin", "Customer"});
+        loginAsCombo.setFont(new Font("Arial", Font.PLAIN, 16));
+        gbc.gridx = 1;
+        loginPanel.add(loginAsCombo, gbc);
 
-        reset = new JButton("Reset");
-        styleButton(reset);
-        reset.addActionListener(this);
-        buttonPanel.add(reset);
+        // Buttons Panel
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.setBackground(Color.WHITE);
 
-        close = new JButton("Close");
-        styleButton(close);
-        close.addActionListener(this);
-        buttonPanel.add(close);
+        login = new JButton("Login");
+        styleButton(login);
+        login.addActionListener(this);
+        buttonPanel.add(login);
+
+        cancel = new JButton("Cancel");
+        styleButton(cancel);
+        cancel.addActionListener(this);
+        buttonPanel.add(cancel);
+
+        signup = new JButton("Signup");
+        styleButton(signup);
+        signup.addActionListener(this);
+        buttonPanel.add(signup);
 
         gbc.gridx = 0;
-        gbc.gridy++;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gradientPanel.add(buttonPanel, gbc);
+        loginPanel.add(buttonPanel, gbc);
 
-        add(gradientPanel, BorderLayout.CENTER);
-        
-        setSize(500, 400);
+        add(loginPanel, BorderLayout.CENTER);
+
+        // Frame properties
+        setSize(450, 300);
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    class GradientPanel extends JPanel {
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            Graphics2D g2d = (Graphics2D) g;
-            GradientPaint gp = new GradientPaint(0, 0, Color.CYAN, 0, getHeight(), Color.MAGENTA);
-            g2d.setPaint(gp);
-            g2d.fillRect(0, 0, getWidth(), getHeight());
-        }
-    }
-
+    // Method to style buttons
     private void styleButton(JButton button) {
         button.setFont(new Font("Arial", Font.PLAIN, 14));
         button.setBackground(new Color(33, 150, 243));
@@ -104,38 +109,57 @@ public class Login extends JFrame implements ActionListener {
         button.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
     }
 
-    public void actionPerformed(ActionEvent ae) {
-        if (ae.getSource() == submit) {
-            String username = tfUsername.getText();
-            String password = String.valueOf(tfPassword.getPassword());
+    // Handling button actions
+   public void actionPerformed(ActionEvent ae) {
+    if (ae.getSource() == login) {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+        String userType = (String) loginAsCombo.getSelectedItem();
 
-            try {
-                Conn c = new Conn();
-                String query = "SELECT * FROM login WHERE username = ? AND password = ?";
-
-                PreparedStatement pst = c.c.prepareStatement(query);
-                pst.setString(1, username);
-                pst.setString(2, password);
-
-                ResultSet rs = pst.executeQuery();
-
-                if (rs.next()) {
-                    setVisible(false);
-                    new Home(); // Opens the Home window after successful login
-                } else {
-                    JOptionPane.showMessageDialog(null, "Invalid Username or Password");
-                }
-            } catch (SQLException sqlException) {
-                JOptionPane.showMessageDialog(null, "SQL Exception: " + sqlException.getMessage());
-                sqlException.printStackTrace();
-            }
-        } else if (ae.getSource() == close) {
-            setVisible(false);
-        } else if (ae.getSource() == reset) {
-            tfUsername.setText("");
-            tfPassword.setText("");
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter both username and password.");
+            return;
         }
+
+        try {
+            // Establish connection using Conn class
+            Conn conn = new Conn();
+            
+            // Debug print statements
+            System.out.println("Attempting login with Username: " + username + ", Role: " + userType);
+
+            // Query for user validation with PreparedStatement, including role check (case insensitive)
+            String query = "SELECT * FROM login WHERE LOWER(username) = LOWER(?) AND password = ? AND LOWER(role) = LOWER(?)";
+            PreparedStatement pst = conn.c.prepareStatement(query);
+            pst.setString(1, username);
+            pst.setString(2, password);
+            pst.setString(3, userType);
+
+            ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                setVisible(false); // Close login window
+                new Home(); // Open home window
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid Username, Password, or Role");
+                usernameField.setText("");
+                passwordField.setText("");
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Database error: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "An unexpected error occurred: " + e.getMessage());
+        }
+    } else if (ae.getSource() == cancel) {
+        setVisible(false);
+    } else if (ae.getSource() == signup) {
+        setVisible(false);
+        new SignUp();
     }
+}
 
     public static void main(String[] args) {
         new Login();
